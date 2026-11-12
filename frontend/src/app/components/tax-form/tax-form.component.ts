@@ -7,44 +7,44 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
-    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
-        <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div class="bg-white dark:bg-slate-900 rounded-xl shadow-2xl max-w-md w-full p-6 border border-gray-100 dark:border-slate-800 transition-colors">
+        <div class="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-slate-800">
           <div>
-            <h2 class="text-xl font-bold text-gray-900">Log Tax Payment</h2>
-            <p class="text-xs text-gray-500">Record annual road taxes or vehicular municipal levies</p>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Log Tax Payment</h2>
+            <p class="text-xs text-gray-500 dark:text-slate-400">Record annual road taxes or vehicular municipal levies</p>
           </div>
-          <button (click)="cancel.emit()" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+          <button (click)="cancel.emit()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl leading-none">&times;</button>
         </div>
 
         <form [formGroup]="form" (ngSubmit)="onSubmit()" class="mt-4 space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700">Tax Year *</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Tax Year *</label>
             <input type="number" formControlName="year"
-              class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              class="mt-1 w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700">Amount Paid ($) *</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Amount Paid ($) *</label>
             <input type="number" step="0.01" formControlName="amount"
-              class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              class="mt-1 w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700">Payment Date *</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Payment Date *</label>
             <input type="date" formControlName="paidDate"
-              class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              class="mt-1 w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700">Receipt / Transaction #</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Receipt / Transaction #</label>
             <input type="text" formControlName="receiptNumber" placeholder="e.g. REC-2024-98432"
-              class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              class="mt-1 w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
 
-          <div class="flex justify-end space-x-3 pt-3 border-t border-gray-100">
+          <div class="flex justify-end space-x-3 pt-3 border-t border-gray-100 dark:border-slate-800">
             <button type="button" (click)="cancel.emit()"
-              class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
+              class="px-4 py-2 border border-gray-300 dark:border-slate-700 rounded-lg text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800">
               Cancel
             </button>
             <button type="submit" [disabled]="form.invalid || submitting"
@@ -91,4 +91,3 @@ export class TaxFormComponent implements OnInit {
     });
   }
 }
-

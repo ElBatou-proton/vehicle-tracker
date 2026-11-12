@@ -7,69 +7,69 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
-    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6">
-        <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div class="bg-white dark:bg-slate-900 rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 border border-gray-100 dark:border-slate-800 transition-colors">
+        <div class="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-slate-800">
           <div>
-            <h2 class="text-xl font-bold text-gray-900">Log Maintenance Record</h2>
-            <p class="text-xs text-gray-500">Record service, oil change, repairs and costs</p>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Log Maintenance Record</h2>
+            <p class="text-xs text-gray-500 dark:text-slate-400">Record service, oil change, repairs and costs</p>
           </div>
-          <button (click)="cancel.emit()" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+          <button (click)="cancel.emit()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl leading-none">&times;</button>
         </div>
 
         <form [formGroup]="form" (ngSubmit)="onSubmit()" class="mt-4 space-y-4">
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700">Service Date *</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Service Date *</label>
               <input type="date" formControlName="date"
-                class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                class="mt-1 w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700">Mileage at Service (km) *</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Mileage at Service (km) *</label>
               <input type="number" formControlName="mileageAtService"
-                class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                class="mt-1 w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700">Labor Cost ($)</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Labor Cost ($)</label>
               <input type="number" step="0.01" formControlName="laborCost" (input)="recalculateTotal()"
-                class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                class="mt-1 w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700">Parts Cost ($)</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Parts Cost ($)</label>
               <input type="number" step="0.01" formControlName="partsCost" (input)="recalculateTotal()"
-                class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                class="mt-1 w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
           </div>
 
-          <div class="p-3 bg-blue-50 rounded-lg flex items-center justify-between">
-            <span class="text-sm font-semibold text-blue-900">Total Calculated Cost:</span>
-            <span class="text-lg font-bold text-blue-700">\${{ form.get('totalCost')?.value | number:'1.2-2' }}</span>
+          <div class="p-3 bg-blue-50 dark:bg-blue-950/40 rounded-lg flex items-center justify-between border border-blue-100 dark:border-blue-900/40">
+            <span class="text-sm font-semibold text-blue-900 dark:text-blue-300">Total Calculated Cost:</span>
+            <span class="text-lg font-bold text-blue-700 dark:text-blue-400">\${{ form.get('totalCost')?.value | number:'1.2-2' }}</span>
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700">Parts Replaced (comma separated)</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Parts Replaced (comma separated)</label>
             <input type="text" formControlName="partsReplacedString" placeholder="Oil filter, 5W-30 Oil, Brake pads"
-              class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              class="mt-1 w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700">Mechanic / Workshop</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Mechanic / Workshop</label>
             <input type="text" formControlName="mechanicOrShop" placeholder="AutoCenter Garage"
-              class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              class="mt-1 w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700">Notes / Diagnostics</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Notes / Diagnostics</label>
             <textarea rows="3" formControlName="notes" placeholder="Scheduled oil change, fluid check, tire pressure..."
-              class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+              class="mt-1 w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
           </div>
 
-          <div class="flex justify-end space-x-3 pt-3 border-t border-gray-100">
+          <div class="flex justify-end space-x-3 pt-3 border-t border-gray-100 dark:border-slate-800">
             <button type="button" (click)="cancel.emit()"
-              class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
+              class="px-4 py-2 border border-gray-300 dark:border-slate-700 rounded-lg text-sm font-medium text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800">
               Cancel
             </button>
             <button type="submit" [disabled]="form.invalid || submitting"
@@ -135,4 +135,3 @@ export class MaintenanceFormComponent implements OnInit {
     });
   }
 }
-

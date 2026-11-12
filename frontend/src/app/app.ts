@@ -1,12 +1,15 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ThemeService } from './services/theme.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink],
+  standalone: true,
+  imports: [CommonModule, RouterOutlet, RouterLink],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('vehicle-tracker');
+  themeService = inject(ThemeService);
 }

@@ -21,7 +21,7 @@ import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
     <div class="space-y-6 max-w-7xl mx-auto">
       <!-- Back button & top bar -->
       <div class="flex items-center justify-between">
-        <a routerLink="/" class="inline-flex items-center space-x-2 text-sm font-semibold text-gray-600 hover:text-gray-900 transition">
+        <a routerLink="/" class="inline-flex items-center space-x-2 text-sm font-semibold text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
           </svg>
@@ -30,14 +30,14 @@ import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
 
         <div class="flex items-center space-x-2" *ngIf="vehicle()">
           <button (click)="showEditVehicleModal = true"
-            class="px-3.5 py-2 border border-gray-300 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-50 flex items-center space-x-1.5 transition">
+            class="px-3.5 py-2 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-xl text-xs font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center space-x-1.5 transition">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
             </svg>
             <span>Edit Vehicle</span>
           </button>
           <button (click)="onDelete()"
-            class="px-3.5 py-2 border border-rose-200 text-rose-600 rounded-xl text-xs font-semibold hover:bg-rose-50 flex items-center space-x-1.5 transition">
+            class="px-3.5 py-2 border border-rose-200 dark:border-rose-900/60 bg-white dark:bg-slate-800 text-rose-600 dark:text-rose-400 rounded-xl text-xs font-semibold hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center space-x-1.5 transition">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
             </svg>
@@ -49,16 +49,16 @@ import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
       <!-- Loading / Error -->
       <div *ngIf="loading()" class="py-20 text-center">
         <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent"></div>
-        <p class="text-sm text-gray-500 mt-2">Loading vehicle records...</p>
+        <p class="text-sm text-gray-500 dark:text-slate-400 mt-2">Loading vehicle records...</p>
       </div>
 
-      <div *ngIf="error()" class="p-4 bg-red-50 text-red-700 rounded-xl text-sm border border-red-200">
+      <div *ngIf="error()" class="p-4 bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 rounded-xl text-sm border border-red-200 dark:border-red-900">
         {{ error() }}
       </div>
 
       <div *ngIf="vehicle() as v" class="space-y-6">
         <!-- Hero Card -->
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden transition-colors">
           <div class="p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between bg-gradient-to-r from-slate-900 to-slate-800 text-white">
             <div class="flex items-center space-x-5">
               <div class="w-20 h-20 rounded-2xl bg-slate-700/60 border border-slate-600 flex items-center justify-center overflow-hidden shrink-0">
@@ -99,22 +99,22 @@ import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
           </div>
 
           <!-- Quick Metrics Bar -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-gray-100 bg-gray-50 border-t border-gray-100">
+          <div class="grid grid-cols-2 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-gray-100 dark:divide-slate-800 bg-gray-50 dark:bg-slate-900/60 border-t border-gray-100 dark:border-slate-800 transition-colors">
             <div class="p-4 sm:p-5">
-              <span class="text-xs uppercase font-semibold text-gray-400">Current Mileage</span>
-              <div class="text-lg font-bold text-gray-900 mt-0.5">{{ v.currentMileage | number }} km</div>
+              <span class="text-xs uppercase font-semibold text-gray-400 dark:text-slate-500">Current Mileage</span>
+              <div class="text-lg font-bold text-gray-900 dark:text-white mt-0.5">{{ v.currentMileage | number }} km</div>
             </div>
             <div class="p-4 sm:p-5">
-              <span class="text-xs uppercase font-semibold text-gray-400">Service Interval</span>
-              <div class="text-lg font-bold text-gray-900 mt-0.5">Every {{ v.kilometerInterval | number }} km</div>
+              <span class="text-xs uppercase font-semibold text-gray-400 dark:text-slate-500">Service Interval</span>
+              <div class="text-lg font-bold text-gray-900 dark:text-white mt-0.5">Every {{ v.kilometerInterval | number }} km</div>
             </div>
             <div class="p-4 sm:p-5">
-              <span class="text-xs uppercase font-semibold text-gray-400">Total Spent (Maintenance)</span>
-              <div class="text-lg font-bold text-blue-600 mt-0.5">\${{ totalMaintenanceCost() | number:'1.2-2' }}</div>
+              <span class="text-xs uppercase font-semibold text-gray-400 dark:text-slate-500">Total Spent (Maintenance)</span>
+              <div class="text-lg font-bold text-blue-600 dark:text-blue-400 mt-0.5">\${{ totalMaintenanceCost() | number:'1.2-2' }}</div>
             </div>
             <div class="p-4 sm:p-5">
-              <span class="text-xs uppercase font-semibold text-gray-400">Total Spent (Taxes)</span>
-              <div class="text-lg font-bold text-indigo-600 mt-0.5">\${{ totalTaxCost() | number:'1.2-2' }}</div>
+              <span class="text-xs uppercase font-semibold text-gray-400 dark:text-slate-500">Total Spent (Taxes)</span>
+              <div class="text-lg font-bold text-indigo-600 dark:text-indigo-400 mt-0.5">\${{ totalTaxCost() | number:'1.2-2' }}</div>
             </div>
           </div>
         </div>
@@ -123,20 +123,20 @@ import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <!-- Oil Change Status -->
           <ng-container *ngIf="vehicleService.calculateOilChangeCountdown(v) as oil">
-            <div class="p-5 rounded-2xl border shadow-sm" [ngClass]="{
-              'bg-emerald-50/50 border-emerald-200': oil.status === 'ok',
-              'bg-amber-50/50 border-amber-200': oil.status === 'due-soon',
-              'bg-rose-50/50 border-rose-200': oil.status === 'overdue'
+            <div class="p-5 rounded-2xl border shadow-sm transition-colors" [ngClass]="{
+              'bg-emerald-50/50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800/80': oil.status === 'ok',
+              'bg-amber-50/50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800/80': oil.status === 'due-soon',
+              'bg-rose-50/50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800/80': oil.status === 'overdue'
             }">
-              <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Service Status</div>
+              <div class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-slate-400">Service Status</div>
               <div class="text-xl font-bold mt-1" [ngClass]="{
-                'text-emerald-800': oil.status === 'ok',
-                'text-amber-800': oil.status === 'due-soon',
-                'text-rose-800': oil.status === 'overdue'
+                'text-emerald-800 dark:text-emerald-300': oil.status === 'ok',
+                'text-amber-800 dark:text-amber-300': oil.status === 'due-soon',
+                'text-rose-800 dark:text-rose-300': oil.status === 'overdue'
               }">
                 {{ oil.status === 'overdue' ? 'Service Overdue' : (oil.status === 'due-soon' ? 'Service Due Soon' : 'Optimal Condition') }}
               </div>
-              <p class="text-xs text-gray-600 mt-1">
+              <p class="text-xs text-gray-600 dark:text-slate-400 mt-1">
                 {{ oil.status === 'overdue' ? (-oil.remainingKm | number) + ' km past due' : (oil.remainingKm | number) + ' km remaining until service' }}
               </p>
             </div>
@@ -144,18 +144,18 @@ import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
 
           <!-- SOAT Status -->
           <ng-container *ngIf="vehicleService.checkSoatStatus(v) as soat">
-            <div class="p-5 rounded-2xl border shadow-sm" [ngClass]="{
-              'bg-emerald-50/50 border-emerald-200': soat.isValid,
-              'bg-rose-50/50 border-rose-200': !soat.isValid
+            <div class="p-5 rounded-2xl border shadow-sm transition-colors" [ngClass]="{
+              'bg-emerald-50/50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800/80': soat.isValid,
+              'bg-rose-50/50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800/80': !soat.isValid
             }">
-              <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">SOAT Insurance</div>
-              <div class="text-xl font-bold mt-1" [ngClass]="soat.isValid ? 'text-emerald-800' : 'text-rose-800'">
+              <div class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-slate-400">SOAT Insurance</div>
+              <div class="text-xl font-bold mt-1" [ngClass]="soat.isValid ? 'text-emerald-800 dark:text-emerald-300' : 'text-rose-800 dark:text-rose-300'">
                 {{ soat.label }}
               </div>
-              <p class="text-xs text-gray-600 mt-1" *ngIf="v.soatExpiryDate">
+              <p class="text-xs text-gray-600 dark:text-slate-400 mt-1" *ngIf="v.soatExpiryDate">
                 Expiry: {{ v.soatExpiryDate | date:'mediumDate' }}
               </p>
-              <p class="text-xs text-rose-600 mt-1" *ngIf="!v.soatExpiryDate">
+              <p class="text-xs text-rose-600 dark:text-rose-400 mt-1" *ngIf="!v.soatExpiryDate">
                 No policy registered.
               </p>
             </div>
@@ -163,18 +163,18 @@ import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
 
           <!-- Annual Revision -->
           <ng-container *ngIf="vehicleService.checkRevisionStatus(v) as rev">
-            <div class="p-5 rounded-2xl border shadow-sm" [ngClass]="{
-              'bg-emerald-50/50 border-emerald-200': rev.isValid,
-              'bg-rose-50/50 border-rose-200': !rev.isValid
+            <div class="p-5 rounded-2xl border shadow-sm transition-colors" [ngClass]="{
+              'bg-emerald-50/50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800/80': rev.isValid,
+              'bg-rose-50/50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800/80': !rev.isValid
             }">
-              <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Annual Revision</div>
-              <div class="text-xl font-bold mt-1" [ngClass]="rev.isValid ? 'text-emerald-800' : 'text-rose-800'">
+              <div class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-slate-400">Annual Revision</div>
+              <div class="text-xl font-bold mt-1" [ngClass]="rev.isValid ? 'text-emerald-800 dark:text-emerald-300' : 'text-rose-800 dark:text-rose-300'">
                 {{ rev.label }}
               </div>
-              <p class="text-xs text-gray-600 mt-1" *ngIf="v.annualRevisionDate">
+              <p class="text-xs text-gray-600 dark:text-slate-400 mt-1" *ngIf="v.annualRevisionDate">
                 Inspection Date: {{ v.annualRevisionDate | date:'mediumDate' }}
               </p>
-              <p class="text-xs text-rose-600 mt-1" *ngIf="!v.annualRevisionDate">
+              <p class="text-xs text-rose-600 dark:text-rose-400 mt-1" *ngIf="!v.annualRevisionDate">
                 No inspection recorded.
               </p>
             </div>
@@ -182,27 +182,27 @@ import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
         </div>
 
         <!-- Section: Maintenance History Log -->
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 space-y-4 transition-colors">
           <div class="flex items-center justify-between">
             <div>
-              <h2 class="text-lg font-bold text-gray-900">Maintenance History Log</h2>
-              <p class="text-xs text-gray-500">Record of service visits, parts replacements and labor expenses</p>
+              <h2 class="text-lg font-bold text-gray-900 dark:text-white">Maintenance History Log</h2>
+              <p class="text-xs text-gray-500 dark:text-slate-400">Record of service visits, parts replacements and labor expenses</p>
             </div>
             <button (click)="showMaintenanceModal = true"
-              class="text-xs font-semibold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition">
+              class="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 dark:hover:bg-blue-900/50 px-3 py-1.5 rounded-lg transition">
               + Add Record
             </button>
           </div>
 
           <!-- Empty Maintenance -->
-          <div *ngIf="v.maintenanceHistory.length === 0" class="py-8 text-center text-gray-400 text-sm">
+          <div *ngIf="v.maintenanceHistory.length === 0" class="py-8 text-center text-gray-400 dark:text-slate-500 text-sm">
             No maintenance records logged yet.
           </div>
 
           <!-- Maintenance Table -->
           <div *ngIf="v.maintenanceHistory.length > 0" class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-              <thead class="bg-gray-50 text-gray-500 text-xs uppercase border-y border-gray-100">
+              <thead class="bg-gray-50 dark:bg-slate-800/80 text-gray-500 dark:text-slate-400 text-xs uppercase border-y border-gray-100 dark:border-slate-800">
                 <tr>
                   <th class="py-3 px-4">Date</th>
                   <th class="py-3 px-4">Mileage</th>
@@ -210,27 +210,27 @@ import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
                   <th class="py-3 px-4">Shop / Mechanic</th>
                   <th class="py-3 px-4">Labor</th>
                   <th class="py-3 px-4">Parts</th>
-                  <th class="py-3 px-4 font-bold text-gray-900">Total</th>
+                  <th class="py-3 px-4 font-bold text-gray-900 dark:text-white">Total</th>
                   <th class="py-3 px-4">Notes</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-gray-100">
-                <tr *ngFor="let m of sortedMaintenance()" class="hover:bg-gray-50/70 transition">
-                  <td class="py-3 px-4 font-medium text-gray-900 whitespace-nowrap">{{ m.date | date:'mediumDate' }}</td>
-                  <td class="py-3 px-4 whitespace-nowrap font-mono">{{ m.mileageAtService | number }} km</td>
+              <tbody class="divide-y divide-gray-100 dark:divide-slate-800">
+                <tr *ngFor="let m of sortedMaintenance()" class="hover:bg-gray-50/70 dark:hover:bg-slate-800/50 transition">
+                  <td class="py-3 px-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">{{ m.date | date:'mediumDate' }}</td>
+                  <td class="py-3 px-4 whitespace-nowrap font-mono text-gray-800 dark:text-slate-300">{{ m.mileageAtService | number }} km</td>
                   <td class="py-3 px-4">
                     <div class="flex flex-wrap gap-1" *ngIf="m.partsReplaced && m.partsReplaced.length > 0">
-                      <span *ngFor="let p of m.partsReplaced" class="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded">
+                      <span *ngFor="let p of m.partsReplaced" class="bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 text-xs px-2 py-0.5 rounded border border-gray-200 dark:border-slate-700">
                         {{ p }}
                       </span>
                     </div>
-                    <span *ngIf="!m.partsReplaced || m.partsReplaced.length === 0" class="text-gray-400 text-xs">-</span>
+                    <span *ngIf="!m.partsReplaced || m.partsReplaced.length === 0" class="text-gray-400 dark:text-slate-600 text-xs">-</span>
                   </td>
-                  <td class="py-3 px-4 text-gray-600 whitespace-nowrap">{{ m.mechanicOrShop || '-' }}</td>
-                  <td class="py-3 px-4 text-gray-600">\${{ m.laborCost | number:'1.2-2' }}</td>
-                  <td class="py-3 px-4 text-gray-600">\${{ m.partsCost | number:'1.2-2' }}</td>
-                  <td class="py-3 px-4 font-bold text-gray-900">\${{ m.totalCost | number:'1.2-2' }}</td>
-                  <td class="py-3 px-4 text-gray-500 text-xs max-w-xs truncate">{{ m.notes || '-' }}</td>
+                  <td class="py-3 px-4 text-gray-600 dark:text-slate-400 whitespace-nowrap">{{ m.mechanicOrShop || '-' }}</td>
+                  <td class="py-3 px-4 text-gray-600 dark:text-slate-400">\${{ m.laborCost | number:'1.2-2' }}</td>
+                  <td class="py-3 px-4 text-gray-600 dark:text-slate-400">\${{ m.partsCost | number:'1.2-2' }}</td>
+                  <td class="py-3 px-4 font-bold text-gray-900 dark:text-white">\${{ m.totalCost | number:'1.2-2' }}</td>
+                  <td class="py-3 px-4 text-gray-500 dark:text-slate-400 text-xs max-w-xs truncate">{{ m.notes || '-' }}</td>
                 </tr>
               </tbody>
             </table>
@@ -238,40 +238,40 @@ import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
         </div>
 
         <!-- Section: Tax Payment Timeline -->
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 space-y-4 transition-colors">
           <div class="flex items-center justify-between">
             <div>
-              <h2 class="text-lg font-bold text-gray-900">Tax Payments & Levies</h2>
-              <p class="text-xs text-gray-500">Historical tax records and government fees</p>
+              <h2 class="text-lg font-bold text-gray-900 dark:text-white">Tax Payments & Levies</h2>
+              <p class="text-xs text-gray-500 dark:text-slate-400">Historical tax records and government fees</p>
             </div>
             <button (click)="showTaxModal = true"
-              class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition">
+              class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 px-3 py-1.5 rounded-lg transition">
               + Add Tax Payment
             </button>
           </div>
 
           <!-- Empty Taxes -->
-          <div *ngIf="v.taxes.length === 0" class="py-8 text-center text-gray-400 text-sm">
+          <div *ngIf="v.taxes.length === 0" class="py-8 text-center text-gray-400 dark:text-slate-500 text-sm">
             No tax payments recorded yet.
           </div>
 
           <!-- Tax Table -->
           <div *ngIf="v.taxes.length > 0" class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-              <thead class="bg-gray-50 text-gray-500 text-xs uppercase border-y border-gray-100">
+              <thead class="bg-gray-50 dark:bg-slate-800/80 text-gray-500 dark:text-slate-400 text-xs uppercase border-y border-gray-100 dark:border-slate-800">
                 <tr>
                   <th class="py-3 px-4">Tax Year</th>
                   <th class="py-3 px-4">Payment Date</th>
                   <th class="py-3 px-4">Receipt / Invoice #</th>
-                  <th class="py-3 px-4 font-bold text-gray-900">Amount Paid</th>
+                  <th class="py-3 px-4 font-bold text-gray-900 dark:text-white">Amount Paid</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-gray-100">
-                <tr *ngFor="let t of sortedTaxes()" class="hover:bg-gray-50/70 transition">
-                  <td class="py-3 px-4 font-bold text-gray-900">{{ t.year }}</td>
-                  <td class="py-3 px-4 text-gray-600 whitespace-nowrap">{{ t.paidDate | date:'mediumDate' }}</td>
-                  <td class="py-3 px-4 font-mono text-gray-600">{{ t.receiptNumber || '-' }}</td>
-                  <td class="py-3 px-4 font-bold text-emerald-600">\${{ t.amount | number:'1.2-2' }}</td>
+              <tbody class="divide-y divide-gray-100 dark:divide-slate-800">
+                <tr *ngFor="let t of sortedTaxes()" class="hover:bg-gray-50/70 dark:hover:bg-slate-800/50 transition">
+                  <td class="py-3 px-4 font-bold text-gray-900 dark:text-white">{{ t.year }}</td>
+                  <td class="py-3 px-4 text-gray-600 dark:text-slate-400 whitespace-nowrap">{{ t.paidDate | date:'mediumDate' }}</td>
+                  <td class="py-3 px-4 font-mono text-gray-600 dark:text-slate-400">{{ t.receiptNumber || '-' }}</td>
+                  <td class="py-3 px-4 font-bold text-emerald-600 dark:text-emerald-400">\${{ t.amount | number:'1.2-2' }}</td>
                 </tr>
               </tbody>
             </table>
@@ -406,4 +406,3 @@ export class VehicleDetailComponent implements OnInit {
     }
   }
 }
-

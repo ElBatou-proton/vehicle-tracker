@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap, catchError, throwError } from 'rxjs';
-import { Vehicle, MaintenanceRecord, TaxRecord } from '../models/vehicle.model';
+import { Vehicle, MaintenanceRecord, TaxRecord, FuelRecord } from '../models/vehicle.model';
 
 @Injectable({
   providedIn: 'root'
@@ -66,6 +66,7 @@ export class VehicleService {
     );
   }
 
+  // Maintenance
   addMaintenance(vehicleId: string, maintenance: Partial<MaintenanceRecord>): Observable<Vehicle> {
     return this.http
       .post<Vehicle>(`${this.apiUrl}/${vehicleId}/maintenance`, maintenance)
@@ -78,6 +79,35 @@ export class VehicleService {
       );
   }
 
+  updateMaintenance(
+    vehicleId: string,
+    maintenanceId: string,
+    maintenance: Partial<MaintenanceRecord>
+  ): Observable<Vehicle> {
+    return this.http
+      .put<Vehicle>(`${this.apiUrl}/${vehicleId}/maintenance/${maintenanceId}`, maintenance)
+      .pipe(
+        tap((updated) => {
+          this.vehicles.update((list) =>
+            list.map((v) => (v._id === vehicleId ? updated : v))
+          );
+        })
+      );
+  }
+
+  deleteMaintenance(vehicleId: string, maintenanceId: string): Observable<Vehicle> {
+    return this.http
+      .delete<Vehicle>(`${this.apiUrl}/${vehicleId}/maintenance/${maintenanceId}`)
+      .pipe(
+        tap((updated) => {
+          this.vehicles.update((list) =>
+            list.map((v) => (v._id === vehicleId ? updated : v))
+          );
+        })
+      );
+  }
+
+  // Taxes
   addTax(vehicleId: string, tax: Partial<TaxRecord>): Observable<Vehicle> {
     return this.http
       .post<Vehicle>(`${this.apiUrl}/${vehicleId}/taxes`, tax)
@@ -90,12 +120,98 @@ export class VehicleService {
       );
   }
 
+  updateTax(vehicleId: string, taxId: string, tax: Partial<TaxRecord>): Observable<Vehicle> {
+    return this.http
+      .put<Vehicle>(`${this.apiUrl}/${vehicleId}/taxes/${taxId}`, tax)
+      .pipe(
+        tap((updated) => {
+          this.vehicles.update((list) =>
+            list.map((v) => (v._id === vehicleId ? updated : v))
+          );
+        })
+      );
+  }
+
+  deleteTax(vehicleId: string, taxId: string): Observable<Vehicle> {
+    return this.http
+      .delete<Vehicle>(`${this.apiUrl}/${vehicleId}/taxes/${taxId}`)
+      .pipe(
+        tap((updated) => {
+          this.vehicles.update((list) =>
+            list.map((v) => (v._id === vehicleId ? updated : v))
+          );
+        })
+      );
+  }
+
+  // Fuel
+  addFuel(vehicleId: string, fuel: Partial<FuelRecord>): Observable<Vehicle> {
+    return this.http
+      .post<Vehicle>(`${this.apiUrl}/${vehicleId}/fuel`, fuel)
+      .pipe(
+        tap((updated) => {
+          this.vehicles.update((list) =>
+            list.map((v) => (v._id === vehicleId ? updated : v))
+          );
+        })
+      );
+  }
+
+  updateFuel(vehicleId: string, fuelId: string, fuel: Partial<FuelRecord>): Observable<Vehicle> {
+    return this.http
+      .put<Vehicle>(`${this.apiUrl}/${vehicleId}/fuel/${fuelId}`, fuel)
+      .pipe(
+        tap((updated) => {
+          this.vehicles.update((list) =>
+            list.map((v) => (v._id === vehicleId ? updated : v))
+          );
+        })
+      );
+  }
+
+  deleteFuel(vehicleId: string, fuelId: string): Observable<Vehicle> {
+    return this.http
+      .delete<Vehicle>(`${this.apiUrl}/${vehicleId}/fuel/${fuelId}`)
+      .pipe(
+        tap((updated) => {
+          this.vehicles.update((list) =>
+            list.map((v) => (v._id === vehicleId ? updated : v))
+          );
+        })
+      );
+  }
+
+  getFuelSummary(
+    vehicleId: string,
+    startDate?: string,
+    endDate?: string
+  ): Observable<{ records: FuelRecord[]; totalCost: number; totalVolume: number; count: number }> {
+    let params = new HttpParams();
+    if (startDate) params = params.set('startDate', startDate);
+    if (endDate) params = params.set('endDate', endDate);
+
+    return this.http.get<{
+      records: FuelRecord[];
+      totalCost: number;
+      totalVolume: number;
+      count: number;
+    }>(`${this.apiUrl}/${vehicleId}/fuel`, { params });
+  }
+
+  uploadPicture(file: File): Observable<{ pictureUrl: string; filename: string }> {
+    const formData = new FormData();
+    formData.append('image', file);
+    return this.http.post<{ pictureUrl: string; filename: string }>(
+      `${this.apiUrl}/upload-image`,
+      formData
+    );
+  }
+
   // Helper calculation for oil change countdown
   calculateOilChangeCountdown(vehicle: Vehicle): { remainingKm: number; status: 'ok' | 'due-soon' | 'overdue' } {
     const history = vehicle.maintenanceHistory || [];
     let lastMileage = 0;
     if (history.length > 0) {
-      // Find highest mileage at service
       lastMileage = Math.max(...history.map((m) => m.mileageAtService || 0));
     }
     const targetMileage = lastMileage + (vehicle.kilometerInterval || 5000);
@@ -144,4 +260,3 @@ export class VehicleService {
     return { isValid: true, label: 'Up to Date' };
   }
 }
-

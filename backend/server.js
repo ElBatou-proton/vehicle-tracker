@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
+const fs = require("fs");
 require("dotenv").config();
 
 const app = express();
@@ -9,8 +11,18 @@ const MONGODB_URI =
   process.env.MONGODB_URI ||
   "mongodb://admin:password123@localhost:27017/vehicle_tracker?authSource=admin";
 
+// Ensure uploads folder exists
+const uploadsDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+
+// Static uploads serving
+app.use("/uploads", express.static(uploadsDir));
 
 // Routes
 const vehicleRoutes = require("./routes/vehicles");
@@ -34,4 +46,3 @@ mongoose
     console.error("MongoDB connection error:", err);
     process.exit(1);
   });
-

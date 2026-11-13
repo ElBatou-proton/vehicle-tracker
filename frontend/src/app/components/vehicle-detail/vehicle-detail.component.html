@@ -61,14 +61,21 @@
 
         <!-- Quick Action Buttons -->
         <div class="flex flex-wrap gap-2.5">
-          <button (click)="showMaintenanceModal = true"
+          <button (click)="openAddFuel()"
+            class="bg-amber-500 hover:bg-amber-600 text-white font-medium px-4 py-2.5 rounded-xl shadow-sm text-sm inline-flex items-center space-x-2 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+            <span>Log Refuel</span>
+          </button>
+          <button (click)="openAddMaintenance()"
             class="bg-blue-600 hover:bg-blue-500 text-white font-medium px-4 py-2.5 rounded-xl shadow-sm text-sm inline-flex items-center space-x-2 transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
             <span>Log Maintenance</span>
           </button>
-          <button (click)="showTaxModal = true"
+          <button (click)="openAddTax()"
             class="bg-slate-700 hover:bg-slate-600 text-white font-medium px-4 py-2.5 rounded-xl shadow-sm text-sm inline-flex items-center space-x-2 border border-slate-600 transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z"></path>
@@ -78,8 +85,8 @@
         </div>
       </div>
 
-      <!-- Quick Metrics Bar -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-gray-100 dark:divide-slate-800 bg-gray-50 dark:bg-slate-900/60 border-t border-gray-100 dark:border-slate-800 transition-colors">
+      <!-- Quick Metrics Bar (5 Metrics) -->
+      <div class="grid grid-cols-2 sm:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-gray-100 dark:divide-slate-800 bg-gray-50 dark:bg-slate-900/60 border-t border-gray-100 dark:border-slate-800 transition-colors">
         <div class="p-4 sm:p-5">
           <span class="text-xs uppercase font-semibold text-gray-400 dark:text-slate-500">Current Mileage</span>
           <div class="text-lg font-bold text-gray-900 dark:text-white mt-0.5">{{ v.currentMileage | number }} km</div>
@@ -89,11 +96,15 @@
           <div class="text-lg font-bold text-gray-900 dark:text-white mt-0.5">Every {{ v.kilometerInterval | number }} km</div>
         </div>
         <div class="p-4 sm:p-5">
-          <span class="text-xs uppercase font-semibold text-gray-400 dark:text-slate-500">Total Spent (Maintenance)</span>
+          <span class="text-xs uppercase font-semibold text-gray-400 dark:text-slate-500">Total Spent (Fuel)</span>
+          <div class="text-lg font-bold text-amber-600 dark:text-amber-400 mt-0.5">\${{ totalFuelCostAllTime() | number:'1.2-2' }}</div>
+        </div>
+        <div class="p-4 sm:p-5">
+          <span class="text-xs uppercase font-semibold text-gray-400 dark:text-slate-500">Total (Maintenance)</span>
           <div class="text-lg font-bold text-blue-600 dark:text-blue-400 mt-0.5">\${{ totalMaintenanceCost() | number:'1.2-2' }}</div>
         </div>
         <div class="p-4 sm:p-5">
-          <span class="text-xs uppercase font-semibold text-gray-400 dark:text-slate-500">Total Spent (Taxes)</span>
+          <span class="text-xs uppercase font-semibold text-gray-400 dark:text-slate-500">Total (Taxes)</span>
           <div class="text-lg font-bold text-indigo-600 dark:text-indigo-400 mt-0.5">\${{ totalTaxCost() | number:'1.2-2' }}</div>
         </div>
       </div>
@@ -161,6 +172,143 @@
       </ng-container>
     </div>
 
+    <!-- SECTION: Fuel Expenses & Date Range Filter -->
+    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 space-y-5 transition-colors">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center space-x-2">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white">Fuel Expenses & Consumption</h2>
+            <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
+              {{ filteredFuelRecords().length }} refuels
+            </span>
+          </div>
+          <p class="text-xs text-gray-500 dark:text-slate-400 mt-0.5">Filter by custom date range to calculate fuel costs</p>
+        </div>
+
+        <button (click)="openAddFuel()"
+          class="text-xs font-semibold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-900/50 px-3.5 py-2 rounded-xl border border-amber-200 dark:border-amber-900/60 transition inline-flex items-center space-x-1.5 self-start lg:self-auto">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          <span>Log New Refuel</span>
+        </button>
+      </div>
+
+      <!-- Date Range Controls & Presets -->
+      <div class="p-4 bg-gray-50 dark:bg-slate-800/60 rounded-xl border border-gray-200 dark:border-slate-700/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center space-x-2">
+            <label class="text-xs font-semibold text-gray-600 dark:text-slate-400">From:</label>
+            <input type="date" [ngModel]="fuelStartDate()" (ngModelChange)="fuelStartDate.set($event)"
+              class="rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs px-2.5 py-1.5 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500" />
+          </div>
+          <div class="flex items-center space-x-2">
+            <label class="text-xs font-semibold text-gray-600 dark:text-slate-400">To:</label>
+            <input type="date" [ngModel]="fuelEndDate()" (ngModelChange)="fuelEndDate.set($event)"
+              class="rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-xs px-2.5 py-1.5 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500" />
+          </div>
+        </div>
+
+        <!-- Range Presets -->
+        <div class="flex items-center space-x-1.5 text-xs">
+          <button (click)="setFuelDateFilter('all')"
+            [ngClass]="!fuelStartDate() && !fuelEndDate() ? 'bg-amber-600 text-white' : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-slate-700'"
+            class="px-2.5 py-1.5 rounded-lg font-medium transition">All Time</button>
+          <button (click)="setFuelDateFilter('30days')"
+            class="px-2.5 py-1.5 rounded-lg font-medium bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-700 transition">Last 30 Days</button>
+          <button (click)="setFuelDateFilter('thisMonth')"
+            class="px-2.5 py-1.5 rounded-lg font-medium bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-700 transition">This Month</button>
+          <button (click)="setFuelDateFilter('thisYear')"
+            class="px-2.5 py-1.5 rounded-lg font-medium bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-700 transition">This Year</button>
+        </div>
+      </div>
+
+      <!-- Date Range Summary Banner -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+          <span class="text-xs uppercase font-semibold text-amber-700 dark:text-amber-400">Total Spent in Range</span>
+          <div class="text-2xl font-black text-amber-700 dark:text-amber-300 mt-0.5">
+            \${{ filteredFuelTotalCost() | number:'1.2-2' }}
+          </div>
+          <p class="text-[11px] text-amber-800 dark:text-amber-400/80 mt-0.5">
+            {{ fuelStartDate() || fuelEndDate() ? 'For selected dates' : 'Total all-time fuel expense' }}
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-gray-200 dark:border-slate-700">
+          <span class="text-xs uppercase font-semibold text-gray-500 dark:text-slate-400">Total Volume Pumped</span>
+          <div class="text-2xl font-black text-gray-900 dark:text-white mt-0.5">
+            {{ filteredFuelTotalVolume() | number:'1.2-2' }} <span class="text-sm font-normal text-gray-500">L/Gal</span>
+          </div>
+          <p class="text-[11px] text-gray-400 mt-0.5">Cumulative fuel quantity</p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-gray-200 dark:border-slate-700">
+          <span class="text-xs uppercase font-semibold text-gray-500 dark:text-slate-400">Avg Cost per Refuel</span>
+          <div class="text-2xl font-black text-gray-900 dark:text-white mt-0.5">
+            \${{ (filteredFuelRecords().length > 0 ? filteredFuelTotalCost() / filteredFuelRecords().length : 0) | number:'1.2-2' }}
+          </div>
+          <p class="text-[11px] text-gray-400 mt-0.5">Average across {{ filteredFuelRecords().length }} entries</p>
+        </div>
+      </div>
+
+      <!-- Empty Fuel State -->
+      <div *ngIf="filteredFuelRecords().length === 0" class="py-8 text-center text-gray-400 dark:text-slate-500 text-sm">
+        No refuel expenses logged for this date range.
+      </div>
+
+      <!-- Fuel Table -->
+      <div *ngIf="filteredFuelRecords().length > 0" class="overflow-x-auto">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-gray-50 dark:bg-slate-800/80 text-gray-500 dark:text-slate-400 text-xs uppercase border-y border-gray-100 dark:border-slate-800">
+            <tr>
+              <th class="py-3 px-4">Date</th>
+              <th class="py-3 px-4">Odometer</th>
+              <th class="py-3 px-4">Fuel Type</th>
+              <th class="py-3 px-4">Volume</th>
+              <th class="py-3 px-4">Unit Price</th>
+              <th class="py-3 px-4 font-bold text-gray-900 dark:text-white">Total Cost</th>
+              <th class="py-3 px-4">Station</th>
+              <th class="py-3 px-4">Notes</th>
+              <th class="py-3 px-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-slate-800">
+            <tr *ngFor="let f of filteredFuelRecords()" class="hover:bg-gray-50/70 dark:hover:bg-slate-800/50 transition">
+              <td class="py-3 px-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">{{ f.date | date:'mediumDate' }}</td>
+              <td class="py-3 px-4 whitespace-nowrap font-mono text-gray-800 dark:text-slate-300">{{ f.mileageAtRefuel | number }} km</td>
+              <td class="py-3 px-4">
+                <span class="px-2 py-0.5 rounded text-xs font-semibold bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-slate-200 border border-gray-200 dark:border-slate-700">
+                  {{ f.fuelType }}
+                </span>
+              </td>
+              <td class="py-3 px-4 text-gray-600 dark:text-slate-400">{{ f.volume | number:'1.2-2' }}</td>
+              <td class="py-3 px-4 text-gray-600 dark:text-slate-400">\${{ f.unitCost | number:'1.2-3' }}</td>
+              <td class="py-3 px-4 font-bold text-amber-600 dark:text-amber-400">\${{ f.totalCost | number:'1.2-2' }}</td>
+              <td class="py-3 px-4 text-gray-600 dark:text-slate-400 whitespace-nowrap">{{ f.station || '-' }}</td>
+              <td class="py-3 px-4 text-gray-500 dark:text-slate-400 text-xs max-w-xs truncate">{{ f.notes || '-' }}</td>
+              <td class="py-3 px-4 text-right whitespace-nowrap">
+                <div class="inline-flex items-center space-x-1">
+                  <button (click)="openEditFuel(f)" title="Edit refuel record"
+                    class="p-1 rounded text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-slate-800 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                  </button>
+                  <button (click)="onDeleteFuel(f)" title="Delete refuel record"
+                    class="p-1 rounded text-gray-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-slate-800 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- Section: Maintenance History Log -->
     <div class="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-6 space-y-4 transition-colors">
       <div class="flex items-center justify-between">
@@ -168,7 +316,7 @@
           <h2 class="text-lg font-bold text-gray-900 dark:text-white">Maintenance History Log</h2>
           <p class="text-xs text-gray-500 dark:text-slate-400">Record of service visits, parts replacements and labor expenses</p>
         </div>
-        <button (click)="showMaintenanceModal = true"
+        <button (click)="openAddMaintenance()"
           class="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 dark:hover:bg-blue-900/50 px-3 py-1.5 rounded-lg transition">
           + Add Record
         </button>
@@ -192,6 +340,7 @@
               <th class="py-3 px-4">Parts</th>
               <th class="py-3 px-4 font-bold text-gray-900 dark:text-white">Total</th>
               <th class="py-3 px-4">Notes</th>
+              <th class="py-3 px-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 dark:divide-slate-800">
@@ -211,6 +360,22 @@
               <td class="py-3 px-4 text-gray-600 dark:text-slate-400">\${{ m.partsCost | number:'1.2-2' }}</td>
               <td class="py-3 px-4 font-bold text-gray-900 dark:text-white">\${{ m.totalCost | number:'1.2-2' }}</td>
               <td class="py-3 px-4 text-gray-500 dark:text-slate-400 text-xs max-w-xs truncate">{{ m.notes || '-' }}</td>
+              <td class="py-3 px-4 text-right whitespace-nowrap">
+                <div class="inline-flex items-center space-x-1">
+                  <button (click)="openEditMaintenance(m)" title="Edit maintenance record"
+                    class="p-1 rounded text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                  </button>
+                  <button (click)="onDeleteMaintenance(m)" title="Delete maintenance record"
+                    class="p-1 rounded text-gray-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-slate-800 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -224,7 +389,7 @@
           <h2 class="text-lg font-bold text-gray-900 dark:text-white">Tax Payments & Levies</h2>
           <p class="text-xs text-gray-500 dark:text-slate-400">Historical tax records and government fees</p>
         </div>
-        <button (click)="showTaxModal = true"
+        <button (click)="openAddTax()"
           class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 px-3 py-1.5 rounded-lg transition">
           + Add Tax Payment
         </button>
@@ -244,6 +409,7 @@
               <th class="py-3 px-4">Payment Date</th>
               <th class="py-3 px-4">Receipt / Invoice #</th>
               <th class="py-3 px-4 font-bold text-gray-900 dark:text-white">Amount Paid</th>
+              <th class="py-3 px-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 dark:divide-slate-800">
@@ -252,6 +418,22 @@
               <td class="py-3 px-4 text-gray-600 dark:text-slate-400 whitespace-nowrap">{{ t.paidDate | date:'mediumDate' }}</td>
               <td class="py-3 px-4 font-mono text-gray-600 dark:text-slate-400">{{ t.receiptNumber || '-' }}</td>
               <td class="py-3 px-4 font-bold text-emerald-600 dark:text-emerald-400">\${{ t.amount | number:'1.2-2' }}</td>
+              <td class="py-3 px-4 text-right whitespace-nowrap">
+                <div class="inline-flex items-center space-x-1">
+                  <button (click)="openEditTax(t)" title="Edit tax record"
+                    class="p-1 rounded text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-slate-800 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                  </button>
+                  <button (click)="onDeleteTax(t)" title="Delete tax record"
+                    class="p-1 rounded text-gray-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-slate-800 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -261,13 +443,22 @@
 </div>
 
 <!-- Modals -->
+<app-fuel-form *ngIf="showFuelModal && vehicle()"
+  [currentVehicleMileage]="vehicle()!.currentMileage"
+  [recordToEdit]="selectedFuel() || undefined"
+  (formSubmit)="onFuelSubmit($event)"
+  (cancel)="showFuelModal = false">
+</app-fuel-form>
+
 <app-maintenance-form *ngIf="showMaintenanceModal && vehicle()"
   [currentVehicleMileage]="vehicle()!.currentMileage"
+  [recordToEdit]="selectedMaintenance() || undefined"
   (formSubmit)="onMaintenanceSubmit($event)"
   (cancel)="showMaintenanceModal = false">
 </app-maintenance-form>
 
 <app-tax-form *ngIf="showTaxModal && vehicle()"
+  [recordToEdit]="selectedTax() || undefined"
   (formSubmit)="onTaxSubmit($event)"
   (cancel)="showTaxModal = false">
 </app-tax-form>
@@ -277,4 +468,3 @@
   (formSubmit)="onVehicleUpdate($event)"
   (cancel)="showEditVehicleModal = false">
 </app-vehicle-form>
-

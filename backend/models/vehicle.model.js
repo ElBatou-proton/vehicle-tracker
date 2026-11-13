@@ -18,6 +18,17 @@ const taxSchema = new mongoose.Schema({
   receiptNumber: String,
 });
 
+const fuelSchema = new mongoose.Schema({
+  date: { type: Date, required: true },
+  mileageAtRefuel: { type: Number, required: true },
+  volume: { type: Number, required: true }, // Liters / Gallons
+  unitCost: { type: Number, default: 0 },
+  totalCost: { type: Number, required: true },
+  fuelType: { type: String, default: "Regular" },
+  station: String,
+  notes: String,
+});
+
 const vehicleSchema = new mongoose.Schema(
   {
     modelType: { type: String, required: true }, // e.g., "Toyota Hilux 2022"
@@ -31,6 +42,9 @@ const vehicleSchema = new mongoose.Schema(
     kilometerInterval: { type: Number, required: true }, // e.g., 5000 km target interval
     maintenanceHistory: [maintenanceSchema],
 
+    // Fuel tracking
+    fuelHistory: [fuelSchema],
+
     // Compliance & Legal
     taxes: [taxSchema],
     hasAnnualRevision: { type: Boolean, default: false },
@@ -42,4 +56,3 @@ const vehicleSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("Vehicle", vehicleSchema);
-

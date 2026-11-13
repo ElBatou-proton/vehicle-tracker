@@ -18,6 +18,18 @@ export interface TaxRecord {
   receiptNumber?: string;
 }
 
+export interface FuelRecord {
+  _id?: string;
+  date: string | Date;
+  mileageAtRefuel: number;
+  volume: number;
+  unitCost: number;
+  totalCost: number;
+  fuelType: string;
+  station?: string;
+  notes?: string;
+}
+
 export interface Vehicle {
   _id: string;
   modelType: string;
@@ -28,6 +40,7 @@ export interface Vehicle {
   currentMileage: number;
   kilometerInterval: number;
   maintenanceHistory: MaintenanceRecord[];
+  fuelHistory: FuelRecord[];
   taxes: TaxRecord[];
   hasAnnualRevision: boolean;
   annualRevisionDate?: string | Date;
@@ -37,5 +50,7 @@ export interface Vehicle {
   updatedAt?: string;
 }
 
-export type CreateVehicleDto = Omit<Vehicle, '_id' | 'maintenanceHistory' | 'taxes' | 'createdAt' | 'updatedAt'>;
-
+export type CreateVehicleDto = Omit<
+  Vehicle,
+  '_id' | 'maintenanceHistory' | 'fuelHistory' | 'taxes' | 'createdAt' | 'updatedAt'
+>;

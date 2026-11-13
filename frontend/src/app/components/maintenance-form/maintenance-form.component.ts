@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MaintenanceRecord } from '../../models/vehicle.model';
 
 @Component({
   selector: 'app-maintenance-form',
@@ -12,23 +13,34 @@ export class MaintenanceFormComponent implements OnInit {
   private fb = inject(FormBuilder);
 
   @Input() currentVehicleMileage = 0;
+  @Input() recordToEdit?: MaintenanceRecord;
   @Output() formSubmit = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
 
   form!: FormGroup;
   submitting = false;
+  isEditMode = false;
 
   ngOnInit(): void {
-    const today = new Date().toISOString().split('T')[0];
+    this.isEditMode = !!this.recordToEdit;
+    const r = this.recordToEdit;
+
+    let dateVal = new Date().toISOString().split('T')[0];
+    if (r?.date) {
+      dateVal = new Date(r.date).toISOString().split('T')[0];
+    }
+
+    const partsStr = r?.partsReplaced ? r.partsReplaced.join(', ') : '';
+
     this.form = this.fb.group({
-      date: [today, Validators.required],
-      mileageAtService: [this.currentVehicleMileage, [Validators.required, Validators.min(0)]],
-      laborCost: [0, [Validators.min(0)]],
-      partsCost: [0, [Validators.min(0)]],
-      totalCost: [0, [Validators.required, Validators.min(0)]],
-      partsReplacedString: [''],
-      mechanicOrShop: [''],
-      notes: ['']
+      date: [dateVal, Validators.required],
+      mileageAtService: [r?.mileageAtService ?? this.currentVehicleMileage, [Validators.required, Validators.min(0)]],
+      laborCost: [r?.laborCost ?? 0, [Validators.min(0)]],
+      partsCost: [r?.partsCost ?? 0, [Validators.min(0)]],
+      totalCost: [r?.totalCost ?? 0, [Validators.required, Validators.min(0)]],
+      partsReplacedString: [partsStr],
+      mechanicOrShop: [r?.mechanicOrShop || ''],
+      notes: [r?.notes || '']
     });
   }
 
@@ -50,6 +62,7 @@ export class MaintenanceFormComponent implements OnInit {
       : [];
 
     this.formSubmit.emit({
+      _id: this.recordToEdit?._id,
       date: val.date,
       mileageAtService: Number(val.mileageAtService),
       laborCost: Number(val.laborCost || 0),
